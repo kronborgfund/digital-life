@@ -8,10 +8,26 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { CheckCircle2, XCircle } from 'lucide-react'
 
+type TranslationKeys =
+  | 'title'
+  | 'description'
+  | 'optionRename'
+  | 'optionNew'
+  | 'stepsTitle'
+  | 'prosTitle'
+  | 'consTitle'
+  | 'confirmButton'
+  | 'renameSteps'
+  | 'renamePros'
+  | 'renameCons'
+  | 'newSteps'
+  | 'newPros'
+  | 'newCons';
+
 export function RenameDigitalIdComponent() {
   const [option, setOption] = useState<'rename' | 'new'>('rename')
 
-  const t = (key: string) => {
+  const t = (key: TranslationKeys): string | string[] => {
     const translations = {
       title: 'Overtagelse af Apple ID eller oprettelse af nyt',
       description: 'Vælg mellem at omdøbe et eksisterende Apple ID eller oprette et helt nyt.',
@@ -58,7 +74,7 @@ export function RenameDigitalIdComponent() {
         'Manuel overførsel af ønskede data krævet'
       ]
     }
-    return translations[key] || key
+    return translations[key];
   }
 
   const renderSteps = (steps: string[]) => (
@@ -87,44 +103,44 @@ export function RenameDigitalIdComponent() {
   return (
     <Card className="w-full max-w-4xl mx-auto">
       <CardHeader>
-        <CardTitle>{t('title')}</CardTitle>
-        <CardDescription>{t('description')}</CardDescription>
+        <CardTitle>{t('title') as string}</CardTitle>
+        <CardDescription>{t('description') as string}</CardDescription>
       </CardHeader>
       <CardContent>
         <RadioGroup className="flex flex-col space-y-4 mb-6" value={option} onValueChange={(value: 'rename' | 'new') => setOption(value)}>
           <div className="flex items-center space-x-2">
             <RadioGroupItem value="rename" id="rename" />
-            <Label htmlFor="rename">{t('optionRename')}</Label>
+            <Label htmlFor="rename">{t('optionRename') as string}</Label>
           </div>
           <div className="flex items-center space-x-2">
             <RadioGroupItem value="new" id="new" />
-            <Label htmlFor="new">{t('optionNew')}</Label>
+            <Label htmlFor="new">{t('optionNew') as string}</Label>
           </div>
         </RadioGroup>
 
         <Accordion type="single" collapsible className="w-full">
           <AccordionItem value="steps">
-            <AccordionTrigger>{t('stepsTitle')}</AccordionTrigger>
+            <AccordionTrigger>{t('stepsTitle') as string}</AccordionTrigger>
             <AccordionContent>
-              {renderSteps(option === 'rename' ? t('renameSteps') : t('newSteps'))}
+              {renderSteps(option === 'rename' ? t('renameSteps') as string[] : t('newSteps') as string[])}
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value="pros">
-            <AccordionTrigger>{t('prosTitle')}</AccordionTrigger>
+            <AccordionTrigger>{t('prosTitle') as string}</AccordionTrigger>
             <AccordionContent>
-              {renderList(option === 'rename' ? t('renamePros') : t('newPros'), 'pro')}
+              {renderList(option === 'rename' ? t('renamePros') as string[] : t('newPros') as string[], 'pro')}
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value="cons">
-            <AccordionTrigger>{t('consTitle')}</AccordionTrigger>
+            <AccordionTrigger>{t('consTitle') as string}</AccordionTrigger>
             <AccordionContent>
-              {renderList(option === 'rename' ? t('renameCons') : t('newCons'), 'con')}
+              {renderList(option === 'rename' ? t('renameCons') as string[] : t('newCons') as string[], 'con')}
             </AccordionContent>
           </AccordionItem>
         </Accordion>
       </CardContent>
       <CardFooter>
-        <Button className="w-full">{t('confirmButton')}</Button>
+        <Button className="w-full">{t('confirmButton') as string}</Button>
       </CardFooter>
     </Card>
   )
