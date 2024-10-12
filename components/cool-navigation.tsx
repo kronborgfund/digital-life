@@ -3,10 +3,8 @@
 import { useState, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from "@/components/ui/button"
-import { Switch } from "@/components/ui/switch"
-import { Label } from "@/components/ui/label"
 import { Laptop, Briefcase, Users, Smartphone, Database, Lock } from 'lucide-react'
-
+import { useLanguage } from './language-context'
 // Define types for the situation object
 export interface Situation {
   title: string;
@@ -14,6 +12,7 @@ export interface Situation {
 }
 
 export interface Translations {
+  safetyInfo: string;
   ai: string;
   categories: string;
   searchPlaceholder: string;
@@ -31,6 +30,7 @@ export interface Translations {
 export type Language = 'da' | 'en';
 export const translations: Record<Language, Translations> = {
   da: {
+    safetyInfo: 'Sikkerhedsinfo',
     categories: 'Kategorier',
     ai: 'AI',
     searchPlaceholder: 'Søg situationer...',
@@ -45,6 +45,7 @@ export const translations: Record<Language, Translations> = {
     startGuide: 'Start guide',
   },
   en: {
+    safetyInfo: 'Safety Info',
     ai: 'AI',
     categories: 'Categories',
     searchPlaceholder: 'Search situations...',
@@ -60,27 +61,25 @@ export const translations: Record<Language, Translations> = {
   }
 }
 
-export function CoolNavigationComponent({ children }: { children: React.ReactNode }) {
+interface CoolNavigationProps {
+  children: React.ReactNode
+}
+export function CoolNavigationComponent({ children }: CoolNavigationProps) {
   const [activeCategory, setActiveCategory] = useState<string>('personal-it')
-  const [language, setLanguage] = useState<Language>('da')
   const router = useRouter()
+  const { language } = useLanguage()
 
   const t = (key: keyof Translations) => translations[language][key]
 
   const categories = useMemo(() => [
-    { name: t('personalIT'), icon: Laptop, path: "personal-it" },
-    { name: t('workIT'), icon: Briefcase, path: "work-it" },
-    { name: t('ai'), icon: Briefcase, path: "ai" },
-    { name: t('situations'), icon: Users, path: "situations" },
-    { name: t('devices'), icon: Smartphone, path: "devices" },
-    { name: t('data'), icon: Database, path: "data" },
-    { name: t('privacy'), icon: Lock, path: "privacy" },
+    { name: t('personalIT'), icon: Laptop, path: "category/personal-it" },
+    { name: t('workIT'), icon: Briefcase, path: "category/work-it" },
+    { name: t('ai'), icon: Briefcase, path: "category/ai" },
+    { name: t('situations'), icon: Users, path: "category/situations" },
+    { name: t('devices'), icon: Smartphone, path: "category/devices" },
+    { name: t('data'), icon: Database, path: "category/data" },
+    { name: t('privacy'), icon: Lock, path: "category/privacy" },
   ], [language, t])
-
-  const toggleLanguage = () => {
-    setLanguage(prev => prev === 'da' ? 'en' : 'da')
-    setActiveCategory('personal-it')
-  }
 
   const handleCategoryClick = (path: string) => {
     setActiveCategory(path)
@@ -88,16 +87,16 @@ export function CoolNavigationComponent({ children }: { children: React.ReactNod
   }
 
   return (
-    <div className="flex h-screen bg-background">
+    <div className="flex h-screen bg-background text-foreground">
       {/* Sidebar */}
       <div className="w-64 bg-muted p-4 hidden md:block">
-        <h2 className="text-2xl font-bold mb-4">{t('categories')}</h2>
+        <h2 className="text-2xl font-bold mb-4 text-foreground">{t('categories')}</h2>
         <nav>
           {categories.map((category) => (
             <Button
               key={category.path}
               variant={activeCategory === category.path ? "secondary" : "ghost"}
-              className="w-full justify-start mb-2"
+              className="w-full justify-start mb-2 text-foreground"
               onClick={() => handleCategoryClick(category.path)}
             >
               <category.icon className="mr-2 h-4 w-4" />
@@ -105,14 +104,12 @@ export function CoolNavigationComponent({ children }: { children: React.ReactNod
             </Button>
           ))}
         </nav>
-        <div className="mt-4 flex items-center space-x-2">
-          <Switch id="language-toggle" onCheckedChange={toggleLanguage} />
-          <Label htmlFor="language-toggle">{t('languageToggle')}</Label>
-        </div>
       </div>
 
       {/* Main content */}
-      {children}
+      <div className="flex-1 p-4 overflow-auto">
+        {children}
+      </div>
     </div>
   )
 }

@@ -2,7 +2,24 @@
 
 import React, { createContext, useContext, useState } from 'react'
 
-const translations = {
+// Define types for the translations
+export interface Translations {
+  appName: string;
+  safetyInfo: string;
+  footerText: string;
+  safetyTitle: string;
+  safetyDescription: string;
+  safetyPoint1: string;
+  safetyPoint2: string;
+  safetyPoint3: string;
+  close: string;
+}
+
+// Define a type for the available languages
+export type Language = 'da' | 'en';
+
+// Define the translations object with proper typing
+const translations: Record<Language, Translations> = {
   da: {
     appName: 'Lenes IT',
     safetyInfo: 'Sikkerhedsinfo',
@@ -27,18 +44,23 @@ const translations = {
   },
 }
 
-const I18nContext = createContext<{
-  t: (key: string) => string
-  setLanguage: (lang: string) => void
-}>({
+// Define the context type
+interface I18nContextProps {
+  t: (key: keyof Translations) => string;
+  setLanguage: (lang: Language) => void;
+}
+
+// Create the context with default values
+const I18nContext = createContext<I18nContextProps>({
   t: () => '',
-  setLanguage: () => {},
+  setLanguage: () => { },
 })
 
+// Provider component
 export const I18nProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [language, setLanguage] = useState('da')
+  const [language, setLanguage] = useState<Language>('da')
 
-  const t = (key: string) => translations[language][key] || key
+  const t = (key: keyof Translations) => translations[language][key]
 
   return (
     <I18nContext.Provider value={{ t, setLanguage }}>
@@ -47,4 +69,5 @@ export const I18nProvider: React.FC<{ children: React.ReactNode }> = ({ children
   )
 }
 
+// Custom hook to use the i18n context
 export const useI18n = () => useContext(I18nContext)
