@@ -62,7 +62,7 @@ export function LandingPage() {
         <h1 className="text-4xl font-bold mb-4">{t('welcomeTitle')}</h1>
         <p className="text-xl mb-6">{t('welcomeSubtitle')}</p>
         <Button asChild>
-          <Link href="/guides">{t('exploreGuides')}</Link>
+          <Link href="/situation/rename-digital-id">{t('exploreGuides')}</Link>
         </Button>
       </section>
 

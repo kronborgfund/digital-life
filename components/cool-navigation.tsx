@@ -3,7 +3,7 @@
 import { useState, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from "@/components/ui/button"
-import { Laptop, Briefcase, Users, Smartphone, Database, Lock } from 'lucide-react'
+import { Laptop, Briefcase, Users, Smartphone, Database, Lock, Brain } from 'lucide-react'
 import { useLanguage } from './language-context'
 // Define types for the situation object
 export interface Situation {
@@ -74,8 +74,8 @@ export function CoolNavigationComponent({ children }: CoolNavigationProps) {
   const categories = useMemo(() => [
     { name: t('personalIT'), icon: Laptop, path: "category/personal-it" },
     { name: t('workIT'), icon: Briefcase, path: "category/work-it" },
-    { name: t('ai'), icon: Briefcase, path: "category/ai" },
-    { name: t('situations'), icon: Users, path: "category/situations" },
+    { name: t('ai'), icon: Brain, path: "category/ai" },
+    { name: t('situations'), icon: Users, path: "situation" },
     { name: t('devices'), icon: Smartphone, path: "category/devices" },
     { name: t('data'), icon: Database, path: "category/data" },
     { name: t('privacy'), icon: Lock, path: "category/privacy" },
